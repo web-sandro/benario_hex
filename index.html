@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor Binário ↔ Hexadecimal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>litoralnortesoftware.co.br</h1>
+    <h2>Binário ↔ Hexadecimal</h2>
+    <h2>Hexadecimal ↔ Binário</h2>
+
+    <label for="binario">Número Binário:</label>
+    <input type="text" id="binario" placeholder="Ex: 11111111" oninput="binarioParaHex()">
+
+    <label for="hexadecimal">Número Hexadecimal:</label>
+    <input type="text" id="hexadecimal" placeholder="Ex: FF" oninput="hexParaBinario()">
+
+    <div class="resultado" id="resultado">Digite um valor em qualquer campo...</div>
+  </div>
+  <div class="passos" id="passos"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
