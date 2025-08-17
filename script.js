@@ -35,11 +35,11 @@ function binarioParaHex() {
   }
 
   hexadecimalInput.value = hex;
-  resultado.innerHTML = `Binário: <strong>( ${binOriginal} )₂</strong> → Hexadecimal: <strong>( ${hex} )₁₆</strong>`;
+  resultado.innerHTML = `Binário: <strong>( ${binOriginal} )₂</strong> → Hex: <strong>( ${hex} )₁₆</strong>`;
 
   etapas.push(`<br><strong>Resultado final: ( ${binOriginal} )₂ → ( ${hex} )₁₆</strong>`);
 
-  passos.innerHTML = "<strong>Passos da conversão Binário → Hexadecimal:</strong><br>" +
+  passos.innerHTML = "<strong>Passos da conversão Binário → Hex:</strong><br>" +
     etapas.join("<br>");
 }
 
@@ -53,7 +53,7 @@ function hexParaBinario() {
 
   if (hex === "" || !/^[0-9A-F]+$/.test(hex)) {
     binarioInput.value = "";
-    resultado.innerHTML = "Digite um valor hexadecimal válido.";
+    resultado.innerHTML = "Digite um valor hex válido.";
     passos.innerHTML = "";
     return;
   }
@@ -70,10 +70,10 @@ function hexParaBinario() {
   }
 
   binarioInput.value = binario;
-  resultado.innerHTML = `Hexadecimal: <strong>( ${hex} )₁₆</strong> → Binário: <strong>( ${binario} )₂</strong>`;
+  resultado.innerHTML = `Hex: <strong>( ${hex} )₁₆</strong> → Binário: <strong>( ${binario} )₂</strong>`;
 
   etapas.push(`<br><strong>Resultado final: ( ${hex} )₁₆ → ( ${binario} )₂</strong>`);
 
-  passos.innerHTML = "<strong>Passos da conversão Hexadecimal → Binário:</strong><br>" +
+  passos.innerHTML = "<strong>Passos da conversão Hex → Binário:</strong><br>" +
     etapas.join("<br>");
 }
