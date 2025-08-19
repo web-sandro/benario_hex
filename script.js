@@ -6,41 +6,59 @@ function binarioParaHex() {
 
   let binario = binarioInput.value.trim();
 
-  if (binario === "" || !/^[01]+$/.test(binario)) {
+  if (binario === "" || !/^[01.]+$/.test(binario) || (binario.split('.').length > 2)) {
     hexadecimalInput.value = "";
-    resultado.innerHTML = "Digite um valor binário válido (apenas 0 e 1).";
+    resultado.innerHTML = "Digite um valor binário válido (0, 1 e no máximo um ponto).";
     passos.innerHTML = "";
     return;
   }
 
-  let binOriginal = binario;
+  let [parteInteira, parteFracionaria] = binario.split(".");
+  parteFracionaria = parteFracionaria || "";
+
   let etapas = [];
 
-  // Preencher com zeros à esquerda para múltiplos de 4
-  while (binario.length % 4 !== 0) {
-    binario = "0" + binario;
+  // ----- Parte inteira -----
+  while (parteInteira.length % 4 !== 0) {
+    parteInteira = "0" + parteInteira;
   }
+  etapas.push(`Parte inteira ajustada: ${parteInteira}`);
 
-  etapas.push(`Ajustando binário para múltiplos de 4 bits: ${binario}`);
-
-  let hex = "";
+  let hexInt = "";
   const hexChars = "0123456789ABCDEF";
-
-  for (let i = 0; i < binario.length; i += 4) {
-    let grupo = binario.substr(i, 4);
+  for (let i = 0; i < parteInteira.length; i += 4) {
+    let grupo = parteInteira.substr(i, 4);
     let valorDecimal = parseInt(grupo, 2);
     let caractereHex = hexChars[valorDecimal];
-    etapas.push(`${grupo} → ${valorDecimal} (decimal) → '${caractereHex}' (hex)`);
-    hex += caractereHex;
+    etapas.push(`${grupo} → ${valorDecimal} → '${caractereHex}'`);
+    hexInt += caractereHex;
   }
 
-  hexadecimalInput.value = hex;
-  resultado.innerHTML = `Binário: <strong>( ${binOriginal} )₂</strong> → Hex: <strong>( ${hex} )₁₆</strong>`;
+  // Remover zeros à esquerda
+  hexInt = hexInt.replace(/^0+/, "") || "0";
 
-  etapas.push(`<br><strong>Resultado final: ( ${binOriginal} )₂ → ( ${hex} )₁₆</strong>`);
+  // ----- Parte fracionária -----
+  let hexFrac = "";
+  if (parteFracionaria.length > 0) {
+    while (parteFracionaria.length % 4 !== 0) {
+      parteFracionaria = parteFracionaria + "0";
+    }
+    etapas.push(`Parte fracionária ajustada: ${parteFracionaria}`);
 
-  passos.innerHTML = "<strong>Passos da conversão Binário → Hex:</strong><br>" +
-    etapas.join("<br>");
+    for (let i = 0; i < parteFracionaria.length; i += 4) {
+      let grupo = parteFracionaria.substr(i, 4);
+      let valorDecimal = parseInt(grupo, 2);
+      let caractereHex = hexChars[valorDecimal];
+      etapas.push(`${grupo} → ${valorDecimal} → '${caractereHex}'`);
+      hexFrac += caractereHex;
+    }
+  }
+
+  let resultadoFinal = hexInt + (hexFrac ? "." + hexFrac : "");
+  hexadecimalInput.value = resultadoFinal;
+
+  resultado.innerHTML = `Binário: <strong>( ${binario} )₂</strong> → Hex: <strong>( ${resultadoFinal} )₁₆</strong>`;
+  passos.innerHTML = "<strong>Passos da conversão Binário → Hex:</strong><br>" + etapas.join("<br>");
 }
 
 function hexParaBinario() {
@@ -51,29 +69,44 @@ function hexParaBinario() {
 
   let hex = hexadecimalInput.value.trim().toUpperCase();
 
-  if (hex === "" || !/^[0-9A-F]+$/.test(hex)) {
+  if (hex === "" || !/^[0-9A-F.]+$/.test(hex) || (hex.split('.').length > 2)) {
     binarioInput.value = "";
-    resultado.innerHTML = "Digite um valor hex válido.";
+    resultado.innerHTML = "Digite um valor hexadecimal válido (0-9, A-F e no máximo um ponto).";
     passos.innerHTML = "";
     return;
   }
 
-  let etapas = [];
-  let binario = "";
+  let [parteInteira, parteFracionaria] = hex.split(".");
+  parteFracionaria = parteFracionaria || "";
 
-  for (let i = 0; i < hex.length; i++) {
-    let caractere = hex[i];
+  let etapas = [];
+  let binInt = "";
+  for (let i = 0; i < parteInteira.length; i++) {
+    let caractere = parteInteira[i];
     let valorDecimal = parseInt(caractere, 16);
     let grupoBin = valorDecimal.toString(2).padStart(4, '0');
-    etapas.push(`${caractere} (hex) → ${valorDecimal} (decimal) → ${grupoBin} (binário)`);
-    binario += grupoBin;
+    etapas.push(`${caractere} → ${valorDecimal} → ${grupoBin}`);
+    binInt += grupoBin;
   }
 
-  binarioInput.value = binario;
-  resultado.innerHTML = `Hex: <strong>( ${hex} )₁₆</strong> → Binário: <strong>( ${binario} )₂</strong>`;
+  // Remover zeros à esquerda da parte inteira
+  binInt = binInt.replace(/^0+/, "") || "0";
 
-  etapas.push(`<br><strong>Resultado final: ( ${hex} )₁₆ → ( ${binario} )₂</strong>`);
+  let binFrac = "";
+  for (let i = 0; i < parteFracionaria.length; i++) {
+    let caractere = parteFracionaria[i];
+    let valorDecimal = parseInt(caractere, 16);
+    let grupoBin = valorDecimal.toString(2).padStart(4, '0');
+    etapas.push(`${caractere} → ${valorDecimal} → ${grupoBin}`);
+    binFrac += grupoBin;
+  }
 
-  passos.innerHTML = "<strong>Passos da conversão Hex → Binário:</strong><br>" +
-    etapas.join("<br>");
+  // Remover zeros à direita da parte fracionária
+  binFrac = binFrac.replace(/0+$/, "");
+
+  let resultadoFinal = binInt + (binFrac ? "." + binFrac : "");
+  binarioInput.value = resultadoFinal;
+
+  resultado.innerHTML = `Hex: <strong>( ${hex} )₁₆</strong> → Binário: <strong>( ${resultadoFinal} )₂</strong>`;
+  passos.innerHTML = "<strong>Passos da conversão Hex → Binário:</strong><br>" + etapas.join("<br>");
 }
